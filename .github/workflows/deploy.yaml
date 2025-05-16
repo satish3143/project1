@@ -34,14 +34,14 @@ jobs:
       # Step 5: Build and push Docker image
       - name: Build and push Docker image
         run: |
-          IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/java-app: .
+          IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/java-app:latest
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
 
       # Step 6: Update deployment.yaml with new image (GitOps approach)
       - name: Update image in Kubernetes YAML and push
         run: |
-          IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/java-app: .
+          IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/java-app:latest
           sed -i "s|image: .*|image: $IMAGE_NAME|" k8s/deployment.yaml
           git config user.name "satish3143"
           git config user.email "satish3143@gmail.com"
