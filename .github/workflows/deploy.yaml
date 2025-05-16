@@ -39,12 +39,19 @@ jobs:
           docker push $IMAGE_NAME
 
       # Step 6: Update deployment.yaml with new image (GitOps approach)
-      - name: Update image in Kubernetes YAML
-        run: |
-          IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/java-app:latest
-          sed -i "s|image: .*|image: $IMAGE_NAME|" k8s/deployment.yaml
-          git config user.name "satish3143"
-          git config user.email "satish3143@github.com"
-          git add k8s/deployment.yaml
-          git commit -m "Update image to $IMAGE_NAME"
-          git push
+      - name: Update image in Kubernetes YAML and push
+  run: |
+    IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/java-app:latest
+    sed -i "s|image: .*|image: $IMAGE_NAME|" k8s/deployment.yaml
+    git config user.name "satish3143"
+    git config user.email "satish3143@gmail.com"
+
+    git add k8s/deployment.yaml
+
+    if git diff --cached --quiet; then
+      echo "No changes to commit."
+    else
+      git commit -m "Update image to $IMAGE_NAME"
+      git push
+    fi
+
